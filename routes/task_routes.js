@@ -1,43 +1,43 @@
 const tasksRouter = require("express").Router();
 const Task = require("../models/task");
-
+const User = require("../models/user")
+tasksRouter.get('/mock',(req,res)=>{
+    res.json({received:'received'});
+})
 // get all tasks of a user
 tasksRouter.get('/users/:userid/tasks', async (req, res) => {
     try {
         const {userid} = req.params;
-        // TODO: because you need to get the tasks of that user
-        // TODO: modify the model
-        const tasks = await Task.find();
-        if (!tasks) {
+        const tasks = await Task.find({userid: userid});
+        if (tasks) {
+            res.status(200).json({
+                status: "success",
+                message: "tasks were found for this user",
+                tasks: tasks
+            });
+        } else {
             res.status(400).json({
-                status: "",
+                status: "pending",
                 message: "no tasks were found for this user",
             });
         }
-        res.status(200).json({
-            status: "success",
-            message: "tasks were found for this user",
-            tasks: tasks
-        });
     } catch (error) {
         res.status(500).json({
             status: "failure",
-            message: "failed to signup user due to database errors",
+            message: "failed due to errors",
             err: error.message
         });
     }
 });
 
 // add task to user
-tasksRouter.post('/users/:userid/tasks', async (req, res) => {
+tasksRouter.post('/tasks', async (req, res) => {
     try {
-        const {userid} = req.params;
-        // TODO: you need to add the task for a specific user
         const task = await Task.create(req.body);
-        Task.findOneAndUpdate()
         res.status(201).json({
             status: "success",
-            message: "task has been created successfully"
+            message: "task has been created successfully",
+            task: task
         });
     } catch (error) {
         res.status(500).json({
@@ -50,18 +50,20 @@ tasksRouter.post('/users/:userid/tasks', async (req, res) => {
 
 
 // update task of user
-tasksRouter.put('/tasks/:taskid', async (req, res) => {
+tasksRouter.put('/tasks/:id', async (req, res) => {
     try {
-        const {userid} = req.params
-        const {taskid} = req.params
-        const task = await Task.findByIdAndUpdate(taskid, req.body);
+        const {id} = req.params
+        const task = await Task.findByIdAndUpdate(id, req.body);
         if (!task) {
-            // return error response
+            res.status(404).json({
+                status:"failure",
+                message:"no task with this id found",
+            })
         }
         res.status(201).json({
             status: "success",
             message: "task has been updated successfully",
-            task: await Task.findById(taskid)
+            task: await Task.findById(id)
         });
     } catch (error) {
         res.status(500).json({
@@ -73,12 +75,16 @@ tasksRouter.put('/tasks/:taskid', async (req, res) => {
 });
 
 //delete task of a specific user
-tasksRouter.delete('/tasks/:taskid', async(req, res) => {
+tasksRouter.delete('/tasks/:id', async (req, res) => {
     try {
-        const {taskid} = req.params;
-        const task = await Task.findByIdAndDelete(taskid)
-        if (!task){
+        const {id} = req.params;
+        const task = await Task.findByIdAndDelete(id)
+        if (!task) {
             // return failure message
+            res.status(404).json({
+                status:"failure",
+                message:"no task with this id found"
+            });
         }
         res.status(201).json({
             status: "success",
