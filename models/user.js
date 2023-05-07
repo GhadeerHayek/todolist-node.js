@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
         required: true,
         type: String,
         unique: true,
-        match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+       // match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
     },
     password: {
         required: true,
