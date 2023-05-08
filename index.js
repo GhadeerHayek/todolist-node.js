@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
-
+const routes = require("./routes")
 const app = express();
 
 // middleware to receive requests
@@ -9,12 +9,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 // routes from other files
-const authRouter = require('./routes/auth_routes')
-const tasksRouter = require('./routes/task_routes')
-const tasksOpRouter = require("./routes/task_op_routes");
-app.use('/', authRouter);
-app.use('/', tasksRouter);
-app.use('/', tasksOpRouter);
+routes(app);
 
 
 // connect to database

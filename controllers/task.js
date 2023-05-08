@@ -1,11 +1,6 @@
-const tasksRouter = require("express").Router();
-const Task = require("../models/task");
-const User = require("../models/user")
-tasksRouter.get('/mock',(req,res)=>{
-    res.json({received:'received'});
-})
-// get all tasks of a user
-tasksRouter.get('/users/:userid/tasks', async (req, res) => {
+const {Task} = require("../models");
+
+const getTasksOfUser = async (req, res) => {
     try {
         const {userid} = req.params;
         const tasks = await Task.find({userid: userid});
@@ -28,10 +23,9 @@ tasksRouter.get('/users/:userid/tasks', async (req, res) => {
             err: error.message
         });
     }
-});
+};
 
-// add task to user
-tasksRouter.post('/tasks', async (req, res) => {
+const addTask = async (req, res) => {
     try {
         const task = await Task.create(req.body);
         res.status(201).json({
@@ -46,18 +40,16 @@ tasksRouter.post('/tasks', async (req, res) => {
             err: error.message
         });
     }
-});
+}
 
-
-// update task of user
-tasksRouter.put('/tasks/:id', async (req, res) => {
+const updateTask = async (req, res) => {
     try {
         const {id} = req.params
         const task = await Task.findByIdAndUpdate(id, req.body);
         if (!task) {
             res.status(404).json({
-                status:"failure",
-                message:"no task with this id found",
+                status: "failure",
+                message: "no task with this id found",
             })
         }
         res.status(201).json({
@@ -72,18 +64,16 @@ tasksRouter.put('/tasks/:id', async (req, res) => {
             err: error.message
         });
     }
-});
-
-//delete task of a specific user
-tasksRouter.delete('/tasks/:id', async (req, res) => {
+};
+const deleteTask = async (req, res) => {
     try {
         const {id} = req.params;
         const task = await Task.findByIdAndDelete(id)
         if (!task) {
             // return failure message
             res.status(404).json({
-                status:"failure",
-                message:"no task with this id found"
+                status: "failure",
+                message: "no task with this id found"
             });
         }
         res.status(201).json({
@@ -97,8 +87,12 @@ tasksRouter.delete('/tasks/:id', async (req, res) => {
             err: error.message
         });
     }
-});
+};
 
 
-module.exports = tasksRouter;
-
+module.exports = {
+    getTasksOfUser,
+    addTask,
+    updateTask,
+    deleteTask
+}

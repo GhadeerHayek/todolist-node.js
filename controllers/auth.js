@@ -1,8 +1,10 @@
-const authRouter = require("express").Router();
-const User = require('../models/user');
-authRouter.post('/auth/signup', async (req, res, next) => {
+const {User} = require("../models");
+
+
+const signup = async (req, res, next) => {
     try {
-        //TODO: validate inputs before insertion
+        // TODO: validate inputs before insertion
+        // TODO: check whether email is unique
         const user = await User.create(req.body);
         res.status(201).json({
             status: "success",
@@ -16,11 +18,11 @@ authRouter.post('/auth/signup', async (req, res, next) => {
             err: error.message
         });
     }
-})
+}
 
-authRouter.post('/auth/login', async (req, res) => {
+
+const login = async (req, res) => {
     try {
-
         // TODO: validate request before submitting
         // the body shall contain the user email and password, so it
         const user = await User.findOne(req.body);
@@ -33,7 +35,7 @@ authRouter.post('/auth/login', async (req, res) => {
                 //user_id: user.id,
                 //user_name: user.name
             });
-        }else{
+        } else {
             res.status(404).json({
                 status: "failure",
                 message: "user login failed",
@@ -49,7 +51,11 @@ authRouter.post('/auth/login', async (req, res) => {
         console.log(errorResponse);
         res.status(500).json(errorResponse);
     }
-});
+}
 
+//TODO: logout
 
-module.exports = authRouter;
+module.exports = {
+    login,
+    signup
+}
