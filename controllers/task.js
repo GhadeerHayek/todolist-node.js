@@ -2,8 +2,9 @@ const {Task} = require("../models");
 
 const getTasksOfUser = async (req, res) => {
     try {
-        const {userid} = req.params;
-        const tasks = await Task.find({userid: userid});
+        // assuming that this request has passed by the auth middleware
+        // the middleware will modify the header and generate a userData which contains the userid
+        const tasks = await Task.findById(req.userData.userId);
         if (tasks) {
             res.status(200).json({
                 status: "success",
@@ -12,7 +13,7 @@ const getTasksOfUser = async (req, res) => {
             });
         } else {
             res.status(400).json({
-                status: "pending",
+                status: "failure",
                 message: "no tasks were found for this user",
             });
         }
@@ -27,6 +28,8 @@ const getTasksOfUser = async (req, res) => {
 
 const addTask = async (req, res) => {
     try {
+        // the userid from the request headers, appended to the request body
+        req.body.userid = req.userData.userId;
         const task = await Task.create(req.body);
         res.status(201).json({
             status: "success",
@@ -44,6 +47,7 @@ const addTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
     try {
+        // this request has to pass by the auth middleware even if no userId is used in its logic
         const {id} = req.params
         const task = await Task.findByIdAndUpdate(id, req.body);
         if (!task) {
@@ -66,6 +70,7 @@ const updateTask = async (req, res) => {
     }
 };
 const deleteTask = async (req, res) => {
+    // this request has to pass by the auth middleware even if no userId is used in its logic
     try {
         const {id} = req.params;
         const task = await Task.findByIdAndDelete(id)

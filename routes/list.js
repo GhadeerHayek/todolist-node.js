@@ -1,8 +1,9 @@
 const tasksOpRouter = require("express").Router();
 const {taskOpController} = require("../controllers")
+const authMiddleware = require("../middlewares/token");
 
 // retrieve all subtasks for a specific task
-tasksOpRouter.get('/list/:taskId/subtasks', taskOpController.getSubtasksOfTask);
+tasksOpRouter.get('/list/:taskId/subtasks', authMiddleware, taskOpController.getSubtasksOfTask);
 
 
 // mark task as completed
@@ -10,12 +11,11 @@ tasksOpRouter.get('/list/:taskId/subtasks', taskOpController.getSubtasksOfTask);
 
 
 // get the ratio of completed tasks
-tasksOpRouter.get('/list/completed', taskOpController.completedTasksRatio);
-
+tasksOpRouter.get('/list/completed', authMiddleware, taskOpController.completedTasksRatio);
 
 
 // get the ratio if completion per day
-tasksOpRouter.get('/list/completedPerDay', taskOpController.completionMeanByDay);
+tasksOpRouter.get('/list/completedPerDay', authMiddleware, taskOpController.completionMeanByDay);
 
 
 module.exports = tasksOpRouter;

@@ -26,38 +26,10 @@ const getSubtasksOfTask = async (req, res) => {
     }
 };
 
-/*
-const markAsCompleted = async (req, res) => {
-    const {taskId} = req.params;
-    try {
-        const task = await Task.findOneAndUpdate(taskId, req.body);
-        if (!task) {
-            res.status(404).json({
-                status: "failure",
-                message: "no task found"
-            });
-        }
-        res.status(200).json({
-            status: "success",
-            message: `the following task ${taskId} status has been updated`,
-            task: await Task.findById(taskId)
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            status: 'failure',
-            message: 'failed to update status'
-        });
-    }
-};
-
-//NOTE: pretty much the same as the update route
- */
-
 // calculate the ratio of the completed tasks and show these tasks
 
 const completedTasksRatio = async (req, res, next) => {
-    const {userid} = req.query;
+    const userid = req.userData.userId;
     try {
         // check the userid
         const user = await User.findById(userid);
@@ -130,7 +102,7 @@ const completedTasksRatio = async (req, res, next) => {
 // you need a ratio, so it's the first count divided by the total count of tasks of this user
 
 const completionMeanByDay = async (req, res, next) => {
-    const {userid} = req.query;
+    const userid = req.userData.userId;
     const {completion_time} = req.query;
     try {
         // check the userid
