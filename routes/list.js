@@ -1,6 +1,6 @@
 const tasksOpRouter = require("express").Router();
 const {taskOpController} = require("../controllers")
-const authMiddleware = require("../middlewares/token");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 // retrieve all subtasks for a specific task
 tasksOpRouter.get('/list/:taskId/subtasks', authMiddleware, taskOpController.getSubtasksOfTask);

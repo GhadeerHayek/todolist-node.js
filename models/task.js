@@ -23,11 +23,8 @@ const taskSchema = mongoose.Schema({
     status: {
         required: true,
         type: String,
-        default: "new",
-        enum: {
-            values: ['new', 'in_progress', 'completed'],
-            message: 'not valid',
-        },
+        enum: ['in_progress', 'completed'],
+        default:'in_progress'
     },
     rank: {
         required: true,
