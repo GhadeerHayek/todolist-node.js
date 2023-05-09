@@ -1,3 +1,4 @@
+require("dotenv/config")
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
@@ -5,6 +6,7 @@ const routes = require("./routes")
 const app = express();
 
 // middleware to receive requests
+// i had to use this so i can send url encoded from postman
 app.use(bodyParser.urlencoded({extended: false}));
 
 
@@ -13,16 +15,12 @@ routes(app);
 
 
 // connect to database
-const URI = "mongodb+srv://ghadeerhayek2001:ghadeer321@ghadeer-db.op9egxb.mongodb.net/todolist?retryWrites=true&w=majority";
-mongoose.connect(URI).then(() => {
+mongoose.connect(process.env.URI).then(() => {
     console.log("successfully connected to database");
-    app.listen(9000, () => {
-        console.log("app is currently running on port 9000");
+    app.listen(process.env.PORT, () => {
+        console.log(`app is currently running on port ${process.env.PORT}`);
     })
 }).catch((error) => {
     console.log("error connecting to database, app is not starting.");
     console.log(error.message);
 })
-
-
-module.exports = app;

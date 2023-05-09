@@ -1,13 +1,18 @@
 const jwt = require("jsonwebtoken");
+require("dotenv/config")
 
-
-const secertkey = "somesecretkey";
-// TODO: create environment variables to contain the .env variables such as the secret key
+/**
+ *
+ * @param req request
+ * @param res response
+ * @param next next middleware in the stack
+ * @returns {*} this middleware ensures that route is only accessed by the authorized user, by checking the token in its headers.
+ * If a user is authorized, it modifies the request body and adds a userid field containing the userId extracted from the token.
+ */
 const authMiddleware = (req, res, next) => {
     // access token from authorization header
-    // if not defined, split the header value to an array using the space as separator then extract the second value
     const token = req.headers.authorization;
-    // if no token
+    // if no token -> not authorized
     if (!token) {
         return res.status(401).json({
                 status: "failure",
@@ -17,11 +22,13 @@ const authMiddleware = (req, res, next) => {
     }
     try {
         // try to decode the token, if it goes without any exceptions then it's correct
-        const decodeToken = jwt.verify(token, secertkey);
+        const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
         req.userData = {userId: decodeToken.userId};
         // pass the request to the next middleware in the stack.
         next();
+
     } catch (error) {
+        // if it fails to decode the token, an exception is thrown and is handled here
         res.status(401).json({
             status: "failure",
             message: "Authentication failed: invalid token"

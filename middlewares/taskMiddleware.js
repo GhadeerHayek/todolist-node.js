@@ -1,5 +1,11 @@
 const Joi = require("@hapi/joi");
-
+/**
+ *
+ * @param req request object
+ * @param res response object
+ * @param next next middleware in the stack
+ * @returns {*} validates request regarding the task resources against the defined set of rules.
+ */
 const taskMiddleware = (req, res, next) => {
 
     const schema = Joi.object({
