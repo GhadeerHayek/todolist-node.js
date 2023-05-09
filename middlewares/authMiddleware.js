@@ -6,8 +6,6 @@ const secertkey = "somesecretkey";
 const authMiddleware = (req, res, next) => {
     // access token from authorization header
     // if not defined, split the header value to an array using the space as separator then extract the second value
-    console.log(req.headers);
-    console.log(req.headers.authorization);
     const token = req.headers.authorization;
     // if no token
     if (!token) {

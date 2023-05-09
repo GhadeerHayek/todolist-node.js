@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const generateToken = require("../helpers/token")
 const {loginValidator} = require("../validators");
 
-const signup = async (req, res, next) => {
+const signup = async (req, res) => {
     try {
         const emailCheck = await User.findOne({email: req.body.email});
         if (emailCheck) {

@@ -4,7 +4,7 @@ const {authMiddleware, taskMiddleware} = require("../middlewares");
 
 
 // get all tasks of a user
-tasksRouter.get('/tasks', authMiddleware, taskMiddleware, taskController.getTasksOfUser);
+tasksRouter.get('/tasks', authMiddleware, taskController.getTasksOfUser);
 
 
 // add task to user

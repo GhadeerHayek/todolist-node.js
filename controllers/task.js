@@ -4,7 +4,7 @@ const getTasksOfUser = async (req, res) => {
     try {
         // assuming that this request has passed by the auth middleware
         // the middleware will modify the header and generate a userData which contains the userid
-        const tasks = await Task.findById(req.userData.userId);
+        const tasks = await Task.find({userid:req.userData.userId});
         if (tasks) {
             res.status(200).json({
                 status: "success",
@@ -31,6 +31,8 @@ const addTask = async (req, res) => {
         // the userid from the request headers, appended to the request body
         req.body.userid = req.userData.userId;
         const task = await Task.create(req.body);
+        console.log(task);
+        console.log(req.body);
         res.status(201).json({
             status: "success",
             message: "task has been created successfully",
