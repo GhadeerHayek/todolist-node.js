@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const routes = require("./routes")
 const app = express();
-
+const cors = require("cors")
 // middleware to receive requests
-// i had to use this so i can send url encoded from postman
+// I had to use this so i can send url encoded from postman
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cors())
 
 
 // routes from other files
